@@ -1,0 +1,31 @@
+{
+  "name": "action-gh-alerter",
+  "version": "1.0.0",
+  "description": "Monitor for specified GitHub alerts and send notifications",
+  "main": "src/scanner.js",
+  "scripts": {
+    "start": "node src/scanner.js",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bcgov/action-gh-alerter.git"
+  },
+  "keywords": [
+    "github",
+    "security",
+    "secret-scanning",
+    "password-leak",
+    "actions"
+  ],
+  "author": "BC Gov",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "@octokit/plugin-retry": "^6.0.1",
+    "@octokit/plugin-throttling": "^8.1.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
