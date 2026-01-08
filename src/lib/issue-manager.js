@@ -17,7 +17,7 @@ const ISSUE_LABEL = 'password-leak-scan';
 async function manageIssue(octokit, owner, repo, results, labels) {
   try {
     // Search for existing issue
-    const existingIssue = await findExistingIssue(octokit, owner, repo);
+    const existingIssue = await findExistingIssue(octokit, owner, repo, labels);
     
     // Format the issue body
     const body = formatIssueBody(results);
@@ -58,12 +58,16 @@ async function manageIssue(octokit, owner, repo, results, labels) {
  * @param {Octokit} octokit - Authenticated Octokit instance
  * @param {string} owner - Repository owner
  * @param {string} repo - Repository name
+ * @param {string[]} labels - Labels to search for
  * @returns {Object|null} Existing issue or null
  */
-async function findExistingIssue(octokit, owner, repo) {
+async function findExistingIssue(octokit, owner, repo, labels) {
   try {
+    // Use the first label that matches the pattern, or the hardcoded ISSUE_LABEL as fallback
+    const searchLabel = labels.find(l => l.includes('password-leak')) || ISSUE_LABEL;
+    
     const response = await octokit.search.issuesAndPullRequests({
-      q: `repo:${owner}/${repo} is:issue label:${ISSUE_LABEL} in:title "${ISSUE_TITLE}"`
+      q: `repo:${owner}/${repo} is:issue label:${searchLabel} in:title "${ISSUE_TITLE}"`
     });
     
     if (response.data.items.length > 0) {

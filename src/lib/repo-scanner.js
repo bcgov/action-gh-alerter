@@ -117,6 +117,8 @@ async function getPasswordLeakAlerts(octokit, owner, repo) {
 
   while (hasMore) {
     try {
+      // As of August 2024, the secret_type parameter supports filtering for 'password'
+      // See: https://github.blog/changelog/2024-08-06-secret-scanning-alerts-for-non-provider-patterns-and-passwords-are-retrievable-with-the-rest-api/
       const response = await octokit.request(
         'GET /repos/{owner}/{repo}/secret-scanning/alerts',
         {
@@ -129,7 +131,8 @@ async function getPasswordLeakAlerts(octokit, owner, repo) {
         }
       );
 
-      // Filter to only password type (double-check since API might return others)
+      // The API should return only password alerts due to secret_type filter,
+      // but we double-check to ensure accuracy
       const passwordAlerts = response.data.filter(
         alert => alert.secret_type === 'password' || 
                  (alert.secret_type_display_name && 
