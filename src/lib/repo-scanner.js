@@ -131,8 +131,8 @@ async function getPasswordLeakAlerts(octokit, owner, repo) {
         }
       );
 
-      // The API should return only password alerts due to secret_type filter,
-      // but we double-check to ensure accuracy
+      // The API filter should return only password alerts, but we validate to ensure
+      // accuracy in case the API returns unexpected results or the format varies
       const passwordAlerts = response.data.filter(
         alert => alert.secret_type === 'password' || 
                  (alert.secret_type_display_name && 

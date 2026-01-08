@@ -63,8 +63,10 @@ async function manageIssue(octokit, owner, repo, results, labels) {
  */
 async function findExistingIssue(octokit, owner, repo, labels) {
   try {
-    // Use the first label that matches the pattern, or the hardcoded ISSUE_LABEL as fallback
-    const searchLabel = labels.find(l => l.includes('password-leak')) || ISSUE_LABEL;
+    // Use the exact ISSUE_LABEL or find a label that exactly matches
+    const searchLabel = labels.includes(ISSUE_LABEL) ? ISSUE_LABEL : 
+                       labels.find(l => l === 'password-leak-scan') || 
+                       ISSUE_LABEL;
     
     const response = await octokit.search.issuesAndPullRequests({
       q: `repo:${owner}/${repo} is:issue label:${searchLabel} in:title "${ISSUE_TITLE}"`
